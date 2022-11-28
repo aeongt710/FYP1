@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject IMetaMaskService MetaMaskService
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">FYP1</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -26,6 +28,8 @@
         </div>
     </nav>
 </div>
+<button @onclick="CheckOptions">Check options</button>
+<button @onclick="connectNow">connectNow</button>
 
 @code {
     private bool collapseNavMenu = true;
@@ -35,5 +39,20 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    public async void CheckOptions()
+    {
+        Console.WriteLine("HasMetaMask=>  " + (await MetaMaskService.HasMetaMask()));
+        Console.WriteLine("IsSiteConnected=>  " + (await MetaMaskService.IsSiteConnected()));
+        Console.WriteLine("GetSelectedChain=>  " + (await MetaMaskService.GetSelectedChain()));
+        Console.WriteLine("GetSelectedAddress=>  " + (await MetaMaskService.GetSelectedAddress()));
+        Console.WriteLine("GetBalance=>  " + (await MetaMaskService.GetBalance((await MetaMaskService.GetSelectedAddress()))));
+
+        var balance = await MetaMaskService.GetSelectedChain();
+    }
+    public async void connectNow()
+    {
+        await MetaMaskService.ConnectMetaMask();
     }
 }
