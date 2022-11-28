@@ -1,9 +1,19 @@
 ﻿@page "/"
-
+@inherits IPFSBase
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
-
+<button @onclick="PostDescToPINATA"> test desc</button>
 <SurveyPrompt Title="How is Blazor working for you?" />
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" InputClass="testfile1">
+    <ButtonTemplate>
+        <MudIconButton HtmlTag="label"
+                       Color="Color.Info"
+                       Icon="@Icons.Filled.PhotoCamera"
+                       for="@context">
+        </MudIconButton>
+    </ButtonTemplate>
+</MudFileUpload>
+<button @onclick="PostImageToPINATA">test upload</button>
