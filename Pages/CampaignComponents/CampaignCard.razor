@@ -1,0 +1,44 @@
+﻿@code{
+    [Parameter]
+    public Campagin UnitCampaign { get; set; }
+}
+<div class="col-xl-4 col-lg-4 col-md-6">
+    <div class="projects projects-02 white-bg mb-30 wow fadeInUp2 animated" data-wow-delay='.6s'>
+        <div class="projects__thumb pos-rel">
+            <img src="@(StaticUtils.PINATA_GATEWAY+"/"+UnitCampaign.imghash)" alt="" style="max-height:190px;min-height:190px;">
+            <a href="#" class="new-tag hot_tag">@UnitCampaign.category</a>
+        </div>
+        <div class="projects__content">
+            <h4>
+                <a href="project-video.html">
+                    @UnitCampaign.title
+                </a>
+            </h4>
+            <div class="skill mb-30">
+                <p>Raised <span>$2535</span></p>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="85">
+                        <h5>33%</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="projects__content--manager">
+                <ul class="project-manager">
+                    <li>
+                        <a href="#">
+                            <img src="assets/img/project/01.png" alt="">
+                            <span>@(UnitCampaign.owner.Substring(0, 4))...@(UnitCampaign.owner.Substring(UnitCampaign.owner.Length-5))</span>
+                        </a>
+                    </li>
+                    <li>
+                        <p class="time">
+                            <i class="far fa-clock"></i> @DateTime.Parse(UnitCampaign.publisheddate, System.Globalization.CultureInfo.CurrentCulture).ToString("MM:dd:yyyy")
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,94 @@
+﻿@page "/campaigns"
+@inherits IPFSBase
+
+
+@code{
+    public List<Campagin> CampaignsList { get; set; } = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //Task.Run()
+        if(firstRender)
+        {
+
+            //CampaignsList = await GetAllCampaigns();
+            var task = Task.Run(async() =>
+            {
+                CampaignsList = await GetAllCampaigns();
+            });
+            await task;
+            StateHasChanged();
+
+        }
+    }
+}
+
+<!--page-title-area start-->
+        <section class="page-title-area" style="background-image:url(assets/img/bg/page-title-bg.jpg);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <div class="page-title-wrapper text-center">
+                            <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Campaigns</h1>
+                            <div class="breadcrumb">
+                                <ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
+                                    <li><a href="index.html">Home <i class="far fa-chevron-right"></i></a></li>
+                                    <li><a class="active" href="#">Campaigns</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--page-title-area area-->
+        <!--project-area start-->
+        <section class="project-01-area pt-125 pb-100">
+            <div class="container">
+                <div class="row mb-50 align-items-center">
+                    <div class="col-xl-10 col-lg-9 col-md-9 col-sm-8">
+                        <h5>Showing All 9 Results</h5>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4">
+                        <div class="select-area mb-50">
+                            <select class="sort-area" name="short" id="short" style="display: none;">
+                                <option value="short By">short By</option>
+                                <option value="A to Z">A to Z</option>
+                                <option value="New">New</option>
+                                <option value="Hot">Hot</option>
+                                <option value="Old">Olsd</option>
+                            </select><div class="nice-select sort-area" tabindex="0"><span class="current">A to Z</span><ul class="list"><li data-value="short By" class="option">short By</li><li data-value="A to Z" class="option selected focus">A to Z</li><li data-value="New" class="option">New</li><li data-value="Hot" class="option">Hot</li><li data-value="Old" class="option">Old</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+            @foreach (var item in CampaignsList)
+            {
+                <CampaignCard UnitCampaign="item" />
+            }
+                </div>
+            </div>
+        </section>
+        <!--project-area end-->
+        <!--cta-area start-->
+        <section class="cta-area theme-bg pt-55 pb-25">
+            <div class="container">
+                <div class="row align-items-md-center">
+                    <div class="col-xl-9 col-lg-9 col-md-8">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="section-title mb-30">
+                                <h2>Become Our <b>Premium</b> Partner ?</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="cta-btn text-left text-md-right">
+                                <a class="theme_btn theme_btn_bg" href="contact.html">contact us <i
+                                    class="far fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--cta-area end-->

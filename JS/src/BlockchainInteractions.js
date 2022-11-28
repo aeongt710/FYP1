@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import Campaign from './artifacts/contracts/Campaign.sol/Campaign.json'
-const CampaignFactory = require('./artifacts/contracts/Campaign.sol/CampaignFactory.json');
+import CampaignFactory from './artifacts/contracts/Campaign.sol/CampaignFactory.json';
 
 
 export const DonateFuncJS = async (contractAddress, donationAmount) => {
@@ -37,18 +37,31 @@ export const ConnectWalletFuncJS = async () => {
 };
 
 
-export const GetAllCompaignFuncJS = async () => {
+export const GetAllCompaignFuncJS = async (address,rpc_url) => {
   const provider = new ethers.providers.JsonRpcBatchProvider(
-    process.env.NEXT_PUBLIC_RPC_URL
+      rpc_url
   );
   const contract = new ethers.Contract(
-    process.env.NEXT_PUBLIC_ADDRESS,
+    address,
     CampaignFactory.abi,
     provider
   );
   const getDeployedCampigns = contract.filters.CampaignCreatedEvent();
-  let events = await contract.queryFilter(getDeployedCampigns);
-  return events;
+    let events = await contract.queryFilter(getDeployedCampigns);
+    let jsonArray = events.map(a => {
+        let obj = {
+            "title": a.args.title,
+            "campaignaddress": a.args.campignAddress,
+            "category": a.args.category,
+            "descriptionhash": a.args.descHash,
+            "imghash": a.args.imgHash,
+            "amountrequired": ethers.utils.formatEther(a.args.requiredAmount),
+            "owner": a.args.owner,
+            "publisheddate": new Date(parseInt(a.args.timestamp) * 1000).toLocaleString()
+        }
+        return obj
+    });
+    return jsonArray;
 }
 
 
