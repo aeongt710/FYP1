@@ -81,6 +81,21 @@ namespace FYP1.Pages.BaseClasses
             //}
         }
 
+        public async Task<List<Campagin>> GetCampaginsByAddress(string address)
+        {
+            var file = files.FirstOrDefault();
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+            var list = await jsModule.InvokeAsync<List<Campagin>>("GetAllCompaignFuncJS", StaticUtils.ADDRESS, StaticUtils.RPC_URL);
+            return list;
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}
+        }
+
 
     }
 }
