@@ -1,4 +1,93 @@
-﻿@page "/campaign"
+﻿@page "/campaign/{campaignaddress}"
+@inherits IPFSBase
+@inject ISnackbar _snackBar
+@inject IMetaMaskService _metaMaskService
+@code{
+    [Parameter]
+    public string CampaignAddress { get; set; }
+    public Campagin UnitCampaign { get; set; } = null;
+    public string Description { get; set; } = null;
+    public double DonateAmount { get; set; } = 0;
+    public List<Transaction> Transactions { get; set; } = null;
+
+    protected override Task OnInitializedAsync()
+    {
+        Task<Campagin> campaign = GetCampaginsByAddress(CampaignAddress);
+        campaign.ContinueWith((e) =>
+        {
+            UnitCampaign = e.Result;
+            StateHasChanged();
+            GetDescriptionFromPINATA(UnitCampaign.descriptionhash)
+                .ContinueWith((f) =>
+                {
+                    Description = f.Result;
+                    StateHasChanged();
+                });
+        });
+        GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
+        {
+            Transactions = e.Result;
+            StateHasChanged();
+        });
+        return base.OnInitializedAsync();
+    }
+
+
+    private async void DonateFunc()
+    {
+        if (!(await _metaMaskService.HasMetaMask()))
+        {
+            _snackBar.Add($"Please intstall Metamask!", Severity.Error);
+            return;
+        }
+        else
+        {
+            await _metaMaskService.ConnectMetaMask();
+            {
+                if (await _metaMaskService.IsSiteConnected())
+                {
+                    try
+                    {
+                        await DonateFunc(DonateAmount, CampaignAddress);
+                        _snackBar.Add($"Transaction Confirmed", Severity.Success);
+                        await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
+                        {
+                            Transactions = e.Result;
+                            StateHasChanged();
+                        });
+                    }
+                    catch(Exception e)
+                    {
+                        _snackBar.Add(e.Message, Severity.Error);
+                    }
+                }
+                else
+                {
+                    _snackBar.Add($"Site not connected!", Severity.Error);
+                }
+            }
+        }
+
+        
+    }
+
+
+    private void IncrementFunc()
+    {
+        DonateAmount = DonateAmount + 0.1;
+        DonateAmount = Math.Round(DonateAmount, 2);
+    }
+    private void DecrementFunc()
+    {
+        if (DonateAmount - 0.1 > 0)
+            DonateAmount = DonateAmount - 0.1;
+        else
+            DonateAmount = 0;
+        DonateAmount = Math.Round(DonateAmount, 2);
+    }
+}
+
+
 <!--page-title-area start-->
         <section class="page-title-area" style="background-image:url(assets/img/bg/page-title-bg.jpg);">
             <div class="right-border-shape">
@@ -8,11 +97,11 @@
                 <div class="row">
                     <div class="col-xl-10 offset-xl-1">
                         <div class="page-title-wrapper text-center">
-                            <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Project Image</h1>
+                    <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Campaign</h1>
                             <div class="breadcrumb">
                                 <ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
-                                    <li><a href="index.html">Home <i class="far fa-chevron-right"></i></a></li>
-                                    <li><a class="active" href="#">Project Image</a></li>
+                                    <li><a href="index.html">Address <i class="far fa-chevron-right"></i></a></li>
+                                    <li><a class="active" target="_blank" href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+CampaignAddress)">@CampaignAddress</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -25,49 +114,61 @@
         <section class="project-image-area grey-bg pt-130 pb-100" style="background-image:url(assets/img/shape/09.png);">
             <div class="container">
                 <div class="row no-gutters">
-                    <div class="col-xl-7">
+            <div class="col-xl-7 card-img-height" >
                         <div class="project-img mb-30 wow fadeInUp2 animated" data-wow-delay='.1s'>
-                            <img src="assets/img/project/19.jpg" alt="">
+                    <img src="@(StaticUtils.PINATA_GATEWAY+"/"+UnitCampaign?.imghash)" class="card-img-height" alt="">
                         </div>
                     </div>
-                    <div class="col-xl-5  wow fadeInUp2 animated" data-wow-delay='.1s'>
-                        <div class="projects project-cart white-bg mb-30">
+            <div class="col-xl-5  wow fadeInUp2 animated card-img-height" data-wow-delay='.1s' >
+                <div class="projects project-cart white-bg mb-30 card-img-height">
                             <div class="projects__content">
-                                <a href="#" class="new-tag">headphone</a>
-                                <h3><a href="project-video.html">Gen3 Airoha Air Pro 3 TWS 
-                                    Cancel Headphone</a></h3>
+                                <a href="#" class="new-tag">@UnitCampaign?.category</a>
+                        <h3><a href="javascript:void(0);">@(UnitCampaign?.title)</a></h3>
                                 <div class="projects__manager d-sm-flex align-items-center mb-40">
                                     <div class="manager-img mr-20">
                                         <img src="assets/img/project/03.png" alt="">
                                     </div>
                                     <div class="name">
-                                        <h5>Somalia D Silva</h5>
-                                        <address>
-                                                <a href="#">9 Campaigns</a>
-                                                <a href="#"><i class="far fa-map-marker-alt"></i> 55 Main Street, New York</a>
-                                            </address>
+                                <a target="_blank" href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+UnitCampaign?.owner)">
+                                        <h5>@(UnitCampaign?.owner.Substring(0, 5))...@(UnitCampaign?.owner.Substring(UnitCampaign.owner.Length - 12))</h5>
+                                    </a>
+                                <address>
+                                            @*<a href="#">9 Campaigns</a>*@
+                                            @*<a href="#"><i class="far fa-map-marker-alt"></i> 55 Main Street, New York</a>*@
+                                    <a href="#"><i class="far fa-clock"></i>  @((UnitCampaign!=null)?DateTime.Parse(UnitCampaign?.publisheddate, System.Globalization.CultureInfo.CurrentCulture).ToString("MM:dd:yyyy"):"")</a>
+                                        </address>
                                     </div>
                                 </div>
                                 <div class="skill mb-20">
-                                    <p class="skill-para">Raised <span>$2535</span></p>
+                            <p class="skill-para">Required &nbsp;&nbsp;
+                                <span>
+                                    @UnitCampaign?.amountrequired
+                                    &nbsp;ETH</span>
+                            </p>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="95">
-                                            <h5>95%</h5>
+                                            <div class="progress-bar" 
+                                                role="progressbar" 
+                                                aria-valuenow="100"
+                                                style="width:@(Transactions!=null?((Transactions?.Select(a=>float.Parse(a.amount)).Sum())/float.Parse(UnitCampaign?.amountrequired))*100 :"0")%;"
+                                                aria-valuemin="0" 
+                                                aria-valuemax="@UnitCampaign?.amountrequired">
+                                    <h5>@(Transactions != null ? ((Transactions?.Select(a => float.Parse(a.amount)).Sum()) / float.Parse(UnitCampaign?.amountrequired)) * 100 : "0")%</h5>
                                         </div>
                                     </div>
                                 </div>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusante doloremque lauda</p>
+                                @*<br />*@
+                                @*<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusante doloremque lauda</p>*@
                                 <ul class="cart-list d-sm-flex align-items-center">
                                     <li>
                                         <form class="cart-plus-minus" action="form.php">
                                             <div class="plus-minus pos-rel">
-                                                <input type="text" value="$5">
-                                                <div class="updown plus"><i class="far fa-chevron-left"></i></div>
-                                                <div class="updown minus"><i class="far fa-chevron-right"></i></div>
+                                                <input type="text" @bind-value="@DonateAmount">
+                                                <div @onclick="DecrementFunc" class="updown plus"><i class="far fa-chevron-left"></i></div>
+                                                <div @onclick="IncrementFunc" class="updown minus"><i class="far fa-chevron-right"></i></div>
                                             </div>
                                         </form>
                                     </li>
-                                    <li><a class="theme_btn theme_btn_bg" href="contact.html" data-animation="fadeInLeft" data-delay=".5s">Donate now <i
+                                    <li><a class="theme_btn theme_btn_bg" @onclick="DonateFunc" data-animation="fadeInLeft" data-delay=".5s">Donate now <i
                                             class="far fa-arrow-right"></i></a>
                                     </li>
                                 </ul>
@@ -99,13 +200,13 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home-01" role="tabpanel" aria-labelledby="home-tab">
-                                <Description/>
+                                <Description Contents="@Description" />
                             </div>
                             <div class="tab-pane fade" id="profile-01" role="tabpanel" aria-labelledby="profile-tab">
                                 <Updates/>
                             </div>
                             <div class="tab-pane fade" id="contact-02" role="tabpanel" aria-labelledby="contact-tab">
-                                <Transactions/>
+                                <Transactions List="@Transactions"/>
                             </div>
                             <div class="tab-pane fade" id="contact-03" role="tabpanel" aria-labelledby="contact2-tab">
                                 <Reviews/>

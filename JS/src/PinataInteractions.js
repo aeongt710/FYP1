@@ -97,7 +97,9 @@ export const UploadFileToIPFS = async (title, file, key, secret) => {
 };
 export const PinataPublicGateway='https://gateway.pinata.cloud/ipfs';
 
-export const GetDescriptionFromPinata=async(hash)=>{
+export const GetDescriptionFromPinata = async (hash) => {
+
     const url = `${PinataPublicGateway}/${hash}`;
-    return axios.get(url)
+    let result = await axios.get(url);
+    return result.data.desc
 }

@@ -68,7 +68,6 @@ namespace FYP1.Pages.BaseClasses
 
         public async Task<List<Campagin>> GetAllCampaigns()
         {
-            var file = files.FirstOrDefault();
             var jsModule = await _blockChain.Value;
             //try
             //{
@@ -81,13 +80,40 @@ namespace FYP1.Pages.BaseClasses
             //}
         }
 
-        public async Task<List<Campagin>> GetCampaginsByAddress(string address)
+        public async Task<Campagin> GetCampaginsByAddress(string address)
         {
-            var file = files.FirstOrDefault();
             var jsModule = await _blockChain.Value;
             //try
             //{
-            var list = await jsModule.InvokeAsync<List<Campagin>>("GetAllCompaignFuncJS", StaticUtils.ADDRESS, StaticUtils.RPC_URL);
+            var campagin = await jsModule.InvokeAsync<Campagin>("GetUnitCompaignsByAddressFuncJS", StaticUtils.ADDRESS,address, StaticUtils.RPC_URL);
+            return campagin;
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}
+        }
+        public async Task<string> GetDescriptionFromPINATA(string hash)
+        {
+            var jsModule = await _pinataModule.Value;
+            //try
+            //{
+            var desc = await jsModule.InvokeAsync<string>("GetDescriptionFromPinata", hash);
+            Console.WriteLine("desc => " + desc);
+            return desc;
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}  
+        }
+        public async Task<List<Transaction>> GetTranactionsByAddress(string address)
+        {
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+            var list = await jsModule.InvokeAsync<List<Transaction>>("GetCompaignTransactionsFuncJS", address, StaticUtils.RPC_URL);
+            
             return list;
             //}
             //catch (Exception e)
@@ -96,6 +122,18 @@ namespace FYP1.Pages.BaseClasses
             //}
         }
 
+        public async Task DonateFunc(double amount,string address)
+        {
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+            await jsModule.InvokeVoidAsync("DonateFuncJS", address, amount);
 
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}
+        }
     }
 }
