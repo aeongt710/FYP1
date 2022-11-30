@@ -6,6 +6,7 @@
 
     public List<Campagin> CampaignsList { get; set; } = new();
     public bool _loading { get; set; } = true;
+    public string _category { get; set; } = "ALL";
     protected override Task OnInitializedAsync()
     {
         var task = Task.Run(async () =>
@@ -17,18 +18,11 @@
         return base.OnInitializedAsync();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        //Task.Run()
-        if(firstRender)
-        {
-
-        }
-    }
 
     private async void FilterFunc(string query)
     {
         _loading = true;
+        _category = query;
         StateHasChanged();
         CampaignsList = await GetCampaignsByCategory(query);
         _loading = false;
@@ -46,7 +40,7 @@
                             <div class="breadcrumb">
                                 <ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
                                     <li><a href="index.html">Filter<i class="far fa-chevron-right"></i></a></li>
-                            <li><a class="active" href="javascript:void(0);">All</a></li>
+                            <li><a class="active" href="javascript:void(0);">@_category</a></li>
                                 </ul>
                             </div>
                         </div>
