@@ -32,6 +32,35 @@ export const GetAllCompaignFuncJS = async (factoryaddress, rpc_url) => {
     return jsonArray;
 }
 
+
+export const GetCompaignsByCategoryIndexFuncJS = async (factoryaddress, category,rpc_url) => {
+    const provider = new ethers.providers.JsonRpcBatchProvider(
+        rpc_url
+    );
+    const contract = new ethers.Contract(
+        factoryaddress,
+        CampaignFactory.abi,
+        provider
+    );
+    const getDeployedCampigns = contract.filters.CampaignCreatedEvent(null,category);
+    let events = await contract.queryFilter(getDeployedCampigns);
+    let jsonArray = events.map(a => {
+        let obj = {
+            "title": a.args.title,
+            "campaignaddress": a.args.campignAddress,
+            "category": a.args.category,
+            "descriptionhash": a.args.descHash,
+            "imghash": a.args.imgHash,
+            "amountrequired": ethers.utils.formatEther(a.args.requiredAmount),
+            "owner": a.args.owner,
+            "publisheddate": new Date(parseInt(a.args.timestamp) * 1000).toLocaleString()
+        }
+        return obj
+    });
+    return jsonArray;
+}
+
+
 //campaign created event address, rpc url
 //export const GetCompaignsByOwnerAddressFuncJS = async (address, rpc_url) => {
 //    if (!(typeof address !== 'undefined' && address))
@@ -118,28 +147,6 @@ export const DonateFuncJS = async (contractAddress, donationAmount) => {
     throw JSON.parse(JSON.stringify(err)).reason
   }
 }
-
-
-//export const ConnectWalletFuncJS = async () => {
-//  if (await window?.ethereum?.request({ "method": "eth_requestAccounts" })) {
-//    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-//    const nrk = await provider.getNetwork()
-//    // console.log(nrk)
-//    if (!(nrk.name == "goerli" && nrk.chainId == 5))
-//      throw "Connect to GoerliETH Network"
-//    const account = provider.getSigner();
-//    const address = await account.getAddress();
-//    const rawBalance = await account.getBalance();
-//    return { address: address, balance: ethers.utils.formatEther(rawBalance) }
-//  } else {
-//    throw "Metamask not installed!";
-//  }
-//};
-
-
-
-
-
 
 
 //export const ApproveCampaignFuncJS = async (campaignContractAddress) => {

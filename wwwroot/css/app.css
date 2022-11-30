@@ -5,3 +5,12 @@
     min-height:500px;
 }
 
+
+.cuustom-preloader {
+    display: flex !important;
+    align-items: center;
+    min-height: 200px;
+    position: relative !important;
+    align-content: center;
+    z-index: 999999;
+}

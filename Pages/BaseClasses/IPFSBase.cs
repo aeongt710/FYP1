@@ -133,6 +133,23 @@ namespace FYP1.Pages.BaseClasses
             //catch (Exception e)
             //{
             //    var a = e;
+            //}GetCompaignsByCategoryIndexFuncJS
+        }
+
+        public async Task<List<Campagin>> GetCampaignsByCategory(string category)
+        {
+            if (category == "ALL" || String.IsNullOrEmpty(category)) 
+                return await GetAllCampaigns();
+
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+            var list = await jsModule.InvokeAsync<List<Campagin>>("GetCompaignsByCategoryIndexFuncJS", StaticUtils.ADDRESS,category, StaticUtils.RPC_URL);
+            return list;
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
             //}
         }
     }
