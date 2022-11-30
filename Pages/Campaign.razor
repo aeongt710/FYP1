@@ -2,6 +2,9 @@
 @inherits IPFSBase
 @inject ISnackbar _snackBar
 @inject IMetaMaskService _metaMaskService
+
+<PageTitle>Campaign</PageTitle>
+
 @code{
     [Parameter]
     public string CampaignAddress { get; set; }
@@ -9,6 +12,8 @@
     public string Description { get; set; } = null;
     public double DonateAmount { get; set; } = 0;
     public List<Transaction> Transactions { get; set; } = null;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authTask { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -35,38 +40,62 @@
 
     private async void DonateFunc()
     {
-        if (!(await _metaMaskService.HasMetaMask()))
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
         {
-            _snackBar.Add($"Please intstall Metamask!", Severity.Error);
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
             return;
         }
         else
         {
-            await _metaMaskService.ConnectMetaMask();
-            {
-                if (await _metaMaskService.IsSiteConnected())
+            try
                 {
-                    try
+                    await DonateFunc(DonateAmount, CampaignAddress);
+                    _snackBar.Add($"Transaction Confirmed", Severity.Success);
+                    await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
                     {
-                        await DonateFunc(DonateAmount, CampaignAddress);
-                        _snackBar.Add($"Transaction Confirmed", Severity.Success);
-                        await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
-                        {
-                            Transactions = e.Result;
-                            StateHasChanged();
-                        });
-                    }
-                    catch(Exception e)
-                    {
-                        _snackBar.Add(e.Message, Severity.Error);
-                    }
+                        Transactions = e.Result;
+                        StateHasChanged();
+                    });
                 }
-                else
+                catch(Exception e)
                 {
-                    _snackBar.Add($"Site not connected!", Severity.Error);
+                    _snackBar.Add(e.Message, Severity.Error);
                 }
-            }
         }
+        //if (!(await _metaMaskService.HasMetaMask()))
+        //{
+        //    _snackBar.Add($"Please intstall Metamask!", Severity.Error);
+        //    return;
+        //}
+        //else
+        //{
+        //    await _metaMaskService.ConnectMetaMask();
+        //    {
+        //        if (await _metaMaskService.IsSiteConnected())
+        //        {
+        //            try
+        //            {
+        //                await DonateFunc(DonateAmount, CampaignAddress);
+        //                _snackBar.Add($"Transaction Confirmed", Severity.Success);
+        //                await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
+        //                {
+        //                    Transactions = e.Result;
+        //                    StateHasChanged();
+        //                });
+        //            }
+        //            catch(Exception e)
+        //            {
+        //                _snackBar.Add(e.Message, Severity.Error);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _snackBar.Add($"Site not connected!", Severity.Error);
+        //        }
+        //    }
+        //}
 
         
     }

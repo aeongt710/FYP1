@@ -1,4 +1,7 @@
-﻿@inject NavigationManager _nav
+﻿@using FYP1.Auth;
+@inject NavigationManager _nav
+@inject AuthenticationStateProvider _auth
+@inject ISnackbar _snackBar
 @code{
 
     protected override void OnInitialized()
@@ -7,6 +10,19 @@
         {
             StateHasChanged();
         };
+    }
+
+    private async void ConnectMetamackFunc()
+    {
+        var a = _auth as CustomAuthenticationProvider;
+        try
+        {
+            await a.Notify();
+        }catch(Exception e)
+        {
+            _snackBar.Add(e.Message, Severity.Error);
+        }
+
     }
 }
 
@@ -51,9 +67,24 @@
                         </a>
                     </div>
                     <div class="quote-btn d-none d-lg-block d-xl-block">
-                        <a href="javascript:void(0);" class="theme_btn theme_btn_bg">
-                            Connect Metamask<i class="far fa-arrow-right"></i>
-                        </a>
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <a href="javascript:void(0);" onclick="@ConnectMetamackFunc" class="theme_btn theme_btn_bg">
+                                    Connect Metamask<i class="far fa-arrow-right"></i>
+                                </a>
+                            </NotAuthorized>
+                            <Authorizing>
+                                <a href="javascript:void(0);"  class="theme_btn theme_btn_bg">
+                                    <MudProgressCircular Color="Color.Default"  Indeterminate="true" />
+                                </a>
+                            </Authorizing>
+                            <Authorized>
+                                <a href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value)" target="_blank" class="theme_btn theme_btn_bg">
+                                    @(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Substring(0,5))...@(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Substring(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Length-12)) <MudIcon Icon="@Icons.Filled.VerifiedUser" Size="MudBlazor.Size.Small"></MudIcon>
+                                </a>
+                            </Authorized>
+                        </AuthorizeView>
+                        
                     </div>
                 </div>
             </div>

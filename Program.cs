@@ -1,5 +1,7 @@
 using FYP1;
+using FYP1.Auth;
 using MetaMask.Blazor;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
@@ -9,9 +11,16 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider>
+    (provider => provider.GetRequiredService<CustomAuthenticationProvider>());
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationProvider>();
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddMudServices();
+
 builder.Services.AddMetaMaskBlazor();
+
+builder.Services.AddMudServices();
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
