@@ -14,3 +14,13 @@
     align-content: center;
     z-index: 999999;
 }
+
+/*working
+.mud-input.mud-input-outlined:focus-within .mud-input-outlined-border {*/
+    /*border-color: #02b663!important;*/
+/*}*/
+
+
+.validation-message{
+    color:red;
+}

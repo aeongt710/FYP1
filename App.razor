@@ -21,6 +21,16 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
-<MudThemeProvider/>
+<MudThemeProvider Theme="MyCustomTheme" />
 <MudDialogProvider/>
 <MudSnackbarProvider/>
+@code {
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = "#02b663"
+            },
+            
+        };
+}

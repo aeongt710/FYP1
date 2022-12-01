@@ -48,10 +48,13 @@
                                     <a class="@(_nav.Uri.EndsWith("/")?"active":"")" href="/">Home </a>
                                 </li>
                                  <li>
-                                    <a class="@(_nav.Uri.EndsWith("campaigns")?"active":"")" href="campaigns">Campaigns</a>
+                                    <a class="@((_nav.Uri.EndsWith("campaigns")||(_nav.Uri.Contains("campaign/")))?"active":"")" href="campaigns">Campaigns</a>
                                  </li>
                                  <li>
                                     <a href="#">Contact</a>
+                                </li>
+                                <li>
+                                    <a class="@(_nav.Uri.EndsWith("launchcampaign")?"active":"")" href="launchcampaign">Launch Campaign </a>
                                 </li>
                                 <li>
                                     <a class="@((_nav.Uri.Contains("campaign/"))?"active":"")" href="campaign">About</a>

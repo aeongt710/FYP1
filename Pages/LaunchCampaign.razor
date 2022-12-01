@@ -1,0 +1,223 @@
+﻿@page "/launchcampaign"
+<PageTitle>Launch New Campaign</PageTitle>
+
+@code {
+    public PostCampaign _vm { get; set; } = new();
+    public string TestVAR { get; set; }
+
+
+    public async void OnValidSubmitFunc()
+    {
+        
+    }
+}
+
+<!--page-title-area start-->
+<section class="page-title-area" style="background-image:url(assets/img/bg/page-title-bg.jpg);">
+    <div class="right-border-shape">
+        <img src="assets/img/shape/02.png" alt="">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 offset-xl-1">
+                <div class="page-title-wrapper text-center">
+                    <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Launch New Campaign</h1>
+                    <div class="breadcrumb">
+                        @*<ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
+                            <li><a >Home <i class="far fa-chevron-right"></i></a></li>
+                            <li><a class="active" href="#">Contact Us</a></li>
+                        </ul>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--page-title-area area-->
+<!--contact-box-area start-->
+<section class="contact-box-area pb-80 pt-125">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 offset-xl-1">
+                <div class="section-title text-center mb-85 wow fadeInUp2 animated" data-wow-delay='.1s'>
+                    <h6 class="left-line pl-75 pr-75">Features Projects</h6>
+                    <h2>
+                        We've Take A Mission To <br>
+                        <span>Solve The Project</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                <div class="contact-box d-lg-flex mb-50 wow fadeInUp2 animated" data-wow-delay='.1s'>
+                    <div class="contact-box__icon">
+                        <i class="far fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-box__content">
+                        <h4>Locations</h4>
+                        <h5>205 Main Street, USA</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                <div class="contact-box d-lg-flex mb-50 wow fadeInUp2 animated" data-wow-delay='.3s'>
+                    <div class="contact-box__icon">
+                        <i class="fal fa-envelope"></i>
+                    </div>
+                    <div class="contact-box__content">
+                        <h4>Email Us</h4>
+                        <h5>support@gmail.com</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+                <div class="contact-box d-lg-flex mb-50 wow fadeInUp2 animated" data-wow-delay='.5s'>
+                    <div class="contact-box__icon">
+                        <i class="fal fa-phone"></i>
+                    </div>
+                    <div class="contact-box__content">
+                        <h4>Phone Us</h4>
+                        <h5>+012 (345) 678 99</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--contact-box-area end-->
+<!--contact-area start-->
+<section class="contact-details-area pb-120 wow fadeInUp2 animated" data-wow-delay='.3s'>
+    
+    <EditForm Model="_vm" OnValidSubmit="OnValidSubmitFunc">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+   <div class="container">
+        <div class="row">
+            <div class=" col-xl-1"></div>
+            <div class="col-xl-10">
+                @*<div class="post-form-area contact-form pt-125">*@
+                    <div class="row">
+                        <MudGrid>
+                            <MudItem xs="6" sm="12" md="6" lg="6">
+                                <MudTextField @bind-Value="_vm.Title" Class="custom-mud-input" Label="Campaign Title" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Abc" AdornmentColor="Color.Primary" />
+                                <ValidationMessage For="()=>_vm.Title"></ValidationMessage>
+                            </MudItem>
+                        <MudItem xs="6" sm="12" md="6" lg="6">
+                                <MudTextField @bind-Value="_vm.Amount" Class="custom-mud-input" Label="Campaign Amount" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="ETH" AdornmentColor="Color.Primary" />
+                                <ValidationMessage For="()=>_vm.Amount"></ValidationMessage>
+                            </MudItem>
+                        <MudItem xs="6" sm="12" md="6" lg="6">
+                                <MudSelect Dense="true" T="string" @bind-Value="_vm.Category" Label="Campaign Category" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Category" AdornmentColor="Color.Primary">
+                                <MudSelectItem Value="@("FYP")" />
+                                <MudSelectItem Value="@("IT")" />
+                                <MudSelectItem Value="@("MEDICAL")" />
+                            </MudSelect>
+                                <ValidationMessage For="()=>_vm.Category"></ValidationMessage>
+                             </MudItem>
+                        <MudItem xs="6" sm="12" md="6" lg="6">
+                                @*Required FilesChanged="UploadFiles"*@
+                                <MudFileUpload T="IBrowserFile" Required="true" @bind-Files="_vm.ImgFile" InputClass="@_vm.ImgClassGuid.ToString()">
+                                <ButtonTemplate Context="another_context" >
+                                    <MudFab HtmlTag="label"
+                                            Color="Color.Success"
+                                            Icon="@Icons.Filled.AttachFile"
+                                            for="@another_context" />
+                                </ButtonTemplate>
+                                    <SelectedTemplate Context="another_context">
+                                    @if (another_context != null)
+                                    {
+                                        <MudText>@another_context.Name</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText>No File</MudText>
+                                    }
+                                </SelectedTemplate>
+                            </MudFileUpload>
+                            
+                               @* @if (_file==null)
+                                {
+                                    <div class="validation-message align-middle">Error</div>
+                                }
+                                else
+                                {
+                                    <div>@_file.Name</div>
+                                }*@
+                                <ValidationMessage For="()=>_vm.ImgFile"></ValidationMessage>
+                        </MudItem>
+                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                <MudTextField @bind-Value="_vm.Description" Class="custom-mud-input" Label="Campaign Amount" Lines="5" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Description" AdornmentColor="Color.Primary" />
+                                <ValidationMessage For="()=>_vm.Description"></ValidationMessage>
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12" lg="12" Style="text-align:center;" >
+                                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Launch Campaign</MudButton>
+                            </MudItem>
+                            
+                        </MudGrid>
+                    </div>
+                @*</div>*@
+            </div>
+        </div>
+    </div>
+    </EditForm>
+</section>
+
+
+
+@*
+<div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="input-box">
+        <h5>Campain Title</h5>
+        <div class="input-text mb-35">
+            <input type="text" class="form-control" placeholder="Campain Title">
+        </div>
+    </div>
+</div>
+<div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="input-box mb-35">
+        <h5>Your Email Address</h5>
+        <div class="input-text input-mail">
+            <MudTextField @bind-Value="TestVAR" Label="Outlined" Variant="Variant.Outlined" Class="custom-mud-input"></MudTextField>
+        </div>
+    </div>
+</div>
+<div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="input-box mb-35">
+        <h5>Your Email Address</h5>
+        <div class="input-text input-mail">
+
+            <input type="text" class="form-control" placeholder="Email Here">
+        </div>
+    </div>
+</div>
+<div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="input-box mb-35">
+        <h5>Phone Number</h5>
+        <div class="input-text input-phone">
+            <input type="text" class="form-control" placeholder="Write Your Phone Number">
+        </div>
+    </div>
+</div>
+<div class="col-xl-6 col-lg-6 col-md-6">
+    <div class="input-box mb-35">
+        <h5>Subject</h5>
+        <div class="input-text input-sub">
+            <input type="text" class="form-control" placeholder="I Would LIke To">
+        </div>
+    </div>
+</div>
+<div class="col-xl-12 col-lg-12 col-md-12">
+    <div class="input-box mb-35">
+        <h5>Leave A Message</h5>
+        <div class="input-text input-message">
+            <textarea name="message" id="message" cols="30" rows="10" placeholder="Write Your Message"></textarea>
+        </div>
+    </div>
+</div>
+<div class="col-xl-12 col-lg-12 col-md-6">
+    <div class="msg-btn text-md-center">
+        <a class="theme_btn theme_btn_bg" href="#">
+            send  message <i class="far fa-arrow-right"></i>
+        </a>
+    </div>
+</div>*@
