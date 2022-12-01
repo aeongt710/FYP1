@@ -31,8 +31,9 @@ export const UploadDescoIPFS = async(description,key,secret) => {
 
     });
 };
-export const UploadFileToIPFS = async (title, file, key, secret) => {
-    var customfile=document.getElementsByClassName("testfile1")[0].files[0]
+export const UploadFileToIPFS = async (title, clasName, key, secret) => {
+
+    var customfile = document.getElementsByClassName(clasName)[0].files[0]
 
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     let data = new FormData();

@@ -1,14 +1,43 @@
 ﻿@page "/launchcampaign"
+@inherits IPFSBase
+@inject ISnackbar _snackBar
 <PageTitle>Launch New Campaign</PageTitle>
 
 @code {
     public PostCampaign _vm { get; set; } = new();
     public string TestVAR { get; set; }
-
+    public bool _apiCall { get; set; } = false;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authTask { get; set; }
 
     public async void OnValidSubmitFunc()
     {
-        
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
+        {
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
+            return;
+        }
+        _apiCall = true;
+        StateHasChanged();
+        try
+        {
+            var result = await PostNewCampaign(_vm);
+            if (result)
+            {
+                _snackBar.Add("Campaign Posted Successfully", Severity.Success);
+                _vm = new();
+                _apiCall = false;
+                StateHasChanged();
+            }
+        }catch(Exception e)
+        {
+            _snackBar.Add(e.Message, Severity.Error);
+            _apiCall = false;
+            StateHasChanged();
+        }
+
     }
 }
 
@@ -116,7 +145,7 @@
                              </MudItem>
                         <MudItem xs="6" sm="12" md="6" lg="6">
                                 @*Required FilesChanged="UploadFiles"*@
-                                <MudFileUpload T="IBrowserFile" Required="true" @bind-Files="_vm.ImgFile" InputClass="@_vm.ImgClassGuid.ToString()">
+                                <MudFileUpload T="IBrowserFile" Required="true" @bind-Files="_vm.ImgFile" InputClass="@_vm.ImgClassGuid">
                                 <ButtonTemplate Context="another_context" >
                                     <MudFab HtmlTag="label"
                                             Color="Color.Success"
@@ -146,11 +175,19 @@
                                 <ValidationMessage For="()=>_vm.ImgFile"></ValidationMessage>
                         </MudItem>
                             <MudItem xs="12" sm="12" md="12" lg="12">
-                                <MudTextField @bind-Value="_vm.Description" Class="custom-mud-input" Label="Campaign Amount" Lines="5" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Description" AdornmentColor="Color.Primary" />
+                                <MudTextField @bind-Value="_vm.Description" Class="custom-mud-input" Label="Campaign Description" Lines="6" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Description" AdornmentColor="Color.Primary" />
                                 <ValidationMessage For="()=>_vm.Description"></ValidationMessage>
                             </MudItem>
                             <MudItem xs="12" sm="12" md="12" lg="12" Style="text-align:center;" >
-                                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Launch Campaign</MudButton>
+                                <MudButton Disabled="_apiCall" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">
+                                    @if(_apiCall)
+                                    {
+                                        <MudProgressCircular Class="ms-n1" Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                                        <MudText Class="ms-2" Color="Color.Primary">Posting Campaign</MudText>
+                                    }else{
+                                        <div>Launch New Campaign</div>
+                                    }
+                                </MudButton>
                             </MudItem>
                             
                         </MudGrid>

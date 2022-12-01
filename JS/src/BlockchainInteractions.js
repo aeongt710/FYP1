@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import Campaign from './artifacts/contracts/Campaign.sol/Campaign.json'
 import CampaignFactory from './artifacts/contracts/Campaign.sol/CampaignFactory.json';
+import { UploadDescoIPFS, UploadFileToIPFS } from './PinataInteractions';
 
 
 
@@ -168,31 +169,50 @@ export const DonateFuncJS = async (contractAddress, donationAmount) => {
 //}
 
 
-export const CreateCampaignFuncJS = async (form) => {
+export const CreateCampaignFuncJS = async (form, key, secret, factoryaddress) => {
 
-  for (const property in form) {
-    if (!(typeof form[property] !== 'undefined' && form[property]))
-      throw `${property} is not defined`
-  }
-  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-  const nrk = await provider.getNetwork()
-  if (!(nrk.name == "goerli" && nrk.chainId == 5))
-    throw "Connect to GoerliETH Network"
-  const account = provider.getSigner();
-  const contract = new ethers.Contract(
-    process.env.NEXT_PUBLIC_ADDRESS,
-    CampaignFactory.abi,
-    account
-  );
-  const CampaignAmount = ethers.utils.parseEther(form.requiredAmount);
-  const campaignData = await contract.CreateCampaignFunc(
-    form.campaignTitle,
-    CampaignAmount,
-    form.imageHash,
-    form.descHash,
-    form.category
-  );
-  console.log("CreateCampaignFuncJS result: ", campaignData)
+    let submitForm = null;
+    console.log("json form",form)
+    let descTask=UploadDescoIPFS(form.description,key,secret);
+    let imgTask = UploadFileToIPFS(form.imgClassGuid, form.imgClassGuid, key, secret);
+
+    await Promise.all([imgTask, descTask]).then((res) => {
+        submitForm = {
+            title: form.title,
+            amount: form.amount,
+            category: form.category,
+            imageHash: res[0].pinataHASH,
+            descHash: res[1].pinataHASH
+        }
+        console.log("sibmit form",submitForm)
+    })
+
+  //for (const property in form) {
+  //  if (!(typeof form[property] !== 'undefined' && form[property]))
+  //    throw `${property} is not defined`
+  //}
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+        const account = provider.getSigner();
+        const contract = new ethers.Contract(
+            factoryaddress,
+            CampaignFactory.abi,
+            account
+        );
+        const CampaignAmount = ethers.utils.parseEther(form.amount+"");
+        const campaignData = await contract.CreateCampaignFunc(
+            submitForm.title,
+            CampaignAmount,
+            submitForm.imageHash,
+            submitForm.descHash,
+            submitForm.category
+        );
+        console.log("CreateCampaignFuncJS result: ", campaignData)
+    } catch (err) {
+        console.log("Error CreateCampaignFuncJS", err)
+        throw JSON.parse(JSON.stringify(err)).reason
+    }
+  
 }
 
 

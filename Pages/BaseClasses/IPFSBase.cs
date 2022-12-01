@@ -99,7 +99,6 @@ namespace FYP1.Pages.BaseClasses
             //try
             //{
             var desc = await jsModule.InvokeAsync<string>("GetDescriptionFromPinata", hash);
-            Console.WriteLine("desc => " + desc);
             return desc;
             //}
             //catch (Exception e)
@@ -151,6 +150,22 @@ namespace FYP1.Pages.BaseClasses
             //{
             //    var a = e;
             //}
+        }
+
+        public async Task<bool> PostNewCampaign(PostCampaign _campaign)
+        {
+
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+                await jsModule.InvokeVoidAsync("CreateCampaignFuncJS", _campaign,StaticUtils.PINATA_API_KEY, StaticUtils.PINATA_API_SECRET,StaticUtils.ADDRESS);
+                return true;
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}
+            return false;
         }
     }
 }

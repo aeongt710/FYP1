@@ -21,7 +21,7 @@ namespace FYP1.Models
         public string? DescHash { get; set; }
         public string? ImgHash { get; set; }
 
-        public Guid ImgClassGuid { get; set; } = Guid.NewGuid();
+        public string ImgClassGuid { get; set; } = "class"+Guid.NewGuid().ToString();
 
     }
 }
