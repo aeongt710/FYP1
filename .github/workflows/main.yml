@@ -16,9 +16,7 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
-    - run: npm ci
-    - run: npm test
+        node-version: 16
 
     # sets up .NET Core SDK 7.0
     - name: Setup .NET Core SDK
@@ -45,6 +43,6 @@ jobs:
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.DEPLOY }}
         BRANCH: gh-pages
         FOLDER: release/wwwroot
