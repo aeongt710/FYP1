@@ -150,23 +150,21 @@ export const DonateFuncJS = async (contractAddress, donationAmount) => {
 }
 
 
-//export const ApproveCampaignFuncJS = async (campaignContractAddress) => {
-//  try {
-//    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-//    const nrk = await provider.getNetwork()
-//    if (!(nrk.name == "goerli" && nrk.chainId == 5))
-//      throw "Connect to GoerliETH Network"
-//    const signer = provider.getSigner();
-//    const contract = new ethers.Contract(campaignContractAddress, Campaign.abi, signer);
-//    const transaction = await contract.ApproveFunc();
-//    var result = await transaction.wait();
-//    console.log(result)
-//  } catch (err) {
-//    console.log("Error ApproveCampaignFuncJS")
-//    console.log(JSON.parse(JSON.stringify(err)).reason)
-//    throw JSON.parse(JSON.stringify(err)).reason
-//  }
-//}
+export const ApproveCampaignFuncJS = async (campaignContractAddress) => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    const nrk = await provider.getNetwork()
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(campaignContractAddress, Campaign.abi, signer);
+    const transaction = await contract.ApproveFunc();
+    var result = await transaction.wait();
+    console.log("Approve campaign result",result)
+  } catch (err) {
+    console.log("Error ApproveCampaignFuncJS")
+    console.log(JSON.parse(JSON.stringify(err)).reason)
+    throw JSON.parse(JSON.stringify(err)).reason
+  }
+}
 
 
 export const CreateCampaignFuncJS = async (form, key, secret, factoryaddress) => {

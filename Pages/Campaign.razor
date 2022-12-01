@@ -50,56 +50,43 @@
         else
         {
             try
+            {
+                await DonateFunc(DonateAmount, CampaignAddress);
+                _snackBar.Add($"Transaction Confirmed", Severity.Success);
+                await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
                 {
-                    await DonateFunc(DonateAmount, CampaignAddress);
-                    _snackBar.Add($"Transaction Confirmed", Severity.Success);
-                    await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
-                    {
-                        Transactions = e.Result;
-                        StateHasChanged();
-                    });
-                }
-                catch(Exception e)
-                {
-                    _snackBar.Add(e.Message, Severity.Error);
-                }
+                    Transactions = e.Result;
+                    StateHasChanged();
+                });
+            }
+            catch(Exception e)
+            {
+                _snackBar.Add(e.Message, Severity.Error);
+            }
         }
-        //if (!(await _metaMaskService.HasMetaMask()))
-        //{
-        //    _snackBar.Add($"Please intstall Metamask!", Severity.Error);
-        //    return;
-        //}
-        //else
-        //{
-        //    await _metaMaskService.ConnectMetaMask();
-        //    {
-        //        if (await _metaMaskService.IsSiteConnected())
-        //        {
-        //            try
-        //            {
-        //                await DonateFunc(DonateAmount, CampaignAddress);
-        //                _snackBar.Add($"Transaction Confirmed", Severity.Success);
-        //                await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
-        //                {
-        //                    Transactions = e.Result;
-        //                    StateHasChanged();
-        //                });
-        //            }
-        //            catch(Exception e)
-        //            {
-        //                _snackBar.Add(e.Message, Severity.Error);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            _snackBar.Add($"Site not connected!", Severity.Error);
-        //        }
-        //    }
-        //}
-
-        
     }
-
+    private async void ApproveFunc()
+    {
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
+        {
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
+            return;
+        }
+        else
+        {
+            try
+            {
+                await ApproveCampaignFunc(CampaignAddress);
+                _snackBar.Add($"Transaction Confirmed", Severity.Success);
+            }
+            catch (Exception e)
+            {
+                _snackBar.Add(e.Message, Severity.Error);
+            }
+        }
+    }
 
     private void IncrementFunc()
     {
@@ -197,9 +184,15 @@
                                             </div>
                                         </form>
                                     </li>
-                                    <li><a class="theme_btn theme_btn_bg" @onclick="DonateFunc" data-animation="fadeInLeft" data-delay=".5s">Donate now <i
-                                            class="far fa-arrow-right"></i></a>
+                                    <li><a class="theme_btn theme_btn_bg custom-theme-btn" @onclick="DonateFunc" data-animation="fadeInLeft" data-delay=".5s">
+                                        Donate</a>
                                     </li>
+                                    <li>
+                                    <a class="theme_btn theme_btn_bg custom-theme-btn" @onclick="ApproveFunc" data-animation="fadeInLeft" data-delay=".5s">
+                                           Approve
+                                        </a>
+                                    </li>
+                            @*<i class="far fa-arrow-right"></i>*@
                                 </ul>
                             </div>
                         </div>

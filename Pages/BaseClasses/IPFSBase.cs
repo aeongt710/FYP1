@@ -167,5 +167,20 @@ namespace FYP1.Pages.BaseClasses
             //}
             return false;
         }
+
+
+        public async Task ApproveCampaignFunc(string address)
+        {
+            var jsModule = await _blockChain.Value;
+            //try
+            //{
+            await jsModule.InvokeVoidAsync("ApproveCampaignFuncJS", address);
+
+            //}
+            //catch (Exception e)
+            //{
+            //    var a = e;
+            //}GetCompaignsByCategoryIndexFuncJS
+        }
     }
 }

@@ -24,3 +24,9 @@
 .validation-message{
     color:red;
 }
+.custom-theme-btn {
+    padding-left: 20px !important;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+    padding-right: 22px !important;
+}
