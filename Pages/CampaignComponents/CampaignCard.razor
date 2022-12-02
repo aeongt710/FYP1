@@ -1,6 +1,21 @@
-﻿@code{
+﻿@inherits IPFSBase
+
+@code{
     [Parameter]
     public Campagin UnitCampaign { get; set; }
+    public List<Transaction> Transactions { get; set; } = null;
+
+    protected override Task OnInitializedAsync()
+    {
+        
+        GetTranactionsByAddress(UnitCampaign.campaignaddress).ContinueWith((e) =>
+        {
+            Transactions = e.Result;
+            StateHasChanged();
+        });
+        return base.OnInitializedAsync();
+    }
+
 }
 <div class="col-xl-4 col-lg-4 col-md-6">
     <div class="projects projects-02 white-bg mb-30 wow fadeInUp2 animated" data-wow-delay='.6s'>
@@ -15,10 +30,15 @@
                 </a>
             </h4>
             <div class="skill mb-30">
-                <p>Raised <span>$2535</span></p>
+                <p>Required&nbsp;&nbsp;<span>@UnitCampaign?.amountrequired&nbsp;ETH</span></p>
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="85">
-                        <h5>33%</h5>
+                    <div class="progress-bar" 
+                    aria-valuenow="100"
+                    style="width:@(Transactions!=null?((Transactions?.Select(a=>float.Parse(a.amount)).Sum())/float.Parse(UnitCampaign?.amountrequired))*100 :"0")%;"
+                    aria-valuemin="0" 
+                    aria-valuemax="@UnitCampaign?.amountrequired"
+                    >
+                        <h5>@(Transactions != null ? (String.Format("{0:0.00}", ((Transactions?.Select(a => float.Parse(a.amount)).Sum()) / float.Parse(UnitCampaign?.amountrequired)) * 100 )): "0")%</h5>
                     </div>
                 </div>
             </div>
