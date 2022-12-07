@@ -3,16 +3,27 @@
 @inject AuthenticationStateProvider _auth
 @inject ISnackbar _snackBar
 @inject IJSRuntime _js
+@inject IMetaMaskService _metaMask
+
+
 @code{
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _nav.LocationChanged += (o, e) =>
         {
             _js.InvokeVoidAsync("CloseMobileNav");
             StateHasChanged();
         };
+        IMetaMaskService.AccountChangedEvent += async (e) =>
+        {
+            var a = _auth as CustomAuthenticationProvider;
+            a.Notify().RunSynchronously();
+            Console.WriteLine("acc changed");
+            StateHasChanged();
+        };
     }
+
 
     private async void ConnectMetamackFunc()
     {
@@ -20,7 +31,8 @@
         try
         {
             await a.Notify();
-        }catch(Exception e)
+        }
+        catch(Exception e)
         {
             _snackBar.Add(e.Message, Severity.Error);
         }
