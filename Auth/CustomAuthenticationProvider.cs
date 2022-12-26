@@ -1,6 +1,5 @@
 ﻿using MetaMask.Blazor;
 using Microsoft.AspNetCore.Components.Authorization;
-using MudBlazor;
 using System.Security.Claims;
 
 namespace FYP1.Auth
@@ -15,18 +14,22 @@ namespace FYP1.Auth
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var connected = await _metaMaskService.IsSiteConnected();
-            if(connected)
+            if (connected)
             {
-                var chain=await _metaMaskService.GetSelectedChain();
-                if(chain.chain.ToString()!= "Goerli")
+                var chain = await _metaMaskService.GetSelectedChain();
+                if (chain.chain.ToString() != "Goerli")
                     throw new Exception("Connect to Goerli ETH Network!");
 
-                var address =await  _metaMaskService.GetSelectedAddress();
+                var address = await _metaMaskService.GetSelectedAddress();
                 List<Claim> claims = new List<Claim>()
                 {
                     new Claim("address",address),
                     new Claim("chain",chain.chain.ToString())
                 };
+
+                if (address.Equals("0xb8d0591f16625c75018f0ae22f11ed6379c2e124"))
+                    claims.Add(new Claim(ClaimTypes.Role, "admin"));
+
                 var userClaimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Authentication Passed") { });
                 var loginUser = new AuthenticationState(userClaimPrincipal);
                 return loginUser;

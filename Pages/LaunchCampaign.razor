@@ -31,7 +31,8 @@
                 _apiCall = false;
                 StateHasChanged();
             }
-        }catch(Exception e)
+        }
+        catch (Exception e)
         {
             _snackBar.Add(e.Message, Severity.Error);
             _apiCall = false;
@@ -53,8 +54,8 @@
                     <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Launch New Campaign</h1>
                     <div class="breadcrumb">
                         @*<ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
-                            <li><a >Home <i class="far fa-chevron-right"></i></a></li>
-                            <li><a class="active" href="#">Contact Us</a></li>
+                        <li><a >Home <i class="far fa-chevron-right"></i></a></li>
+                        <li><a class="active" href="#">Contact Us</a></li>
                         </ul>*@
                     </div>
                 </div>
@@ -78,7 +79,7 @@
             </div>
         </div>
         <div class="row">
-            
+
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
                 <div class="contact-box d-lg-flex mb-50 wow fadeInUp2 animated" data-wow-delay='.3s'>
                     <div class="contact-box__icon">
@@ -104,7 +105,7 @@
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
                 <div class="contact-box d-lg-flex mb-50 wow fadeInUp2 animated" data-wow-delay='.5s'>
                     <div class="contact-box__icon">
-                        <i class="fal "><img src="icons/icons8_unlock_document_24px.png"/></i>
+                        <i class="fal "><img src="icons/icons8_unlock_document_24px.png" /></i>
                     </div>
                     <div class="contact-box__content">
                         <h4>Premissionless</h4>
@@ -118,85 +119,90 @@
 <!--contact-box-area end-->
 <!--contact-area start-->
 <section class="contact-details-area pb-120 wow fadeInUp2 animated" data-wow-delay='.3s'>
-    
+
     <EditForm Model="_vm" OnValidSubmit="OnValidSubmitFunc">
         <DataAnnotationsValidator></DataAnnotationsValidator>
-   <div class="container">
+        <div class="container">
             <div class="row" style=" display: flex; justify-content: center">
-            @*<div class=" col-xl-1"></div>*@
-            <div class="col-xl-10">
-                @*<div class="post-form-area contact-form pt-125">*@
+                @*<div class=" col-xl-1"></div>*@
+                <div class="col-xl-10">
+                    @*<div class="post-form-area contact-form pt-125">*@
                     <div class="row">
                         <MudGrid>
                             <MudItem xs="6" sm="12" md="6" lg="6">
                                 <MudTextField @bind-Value="_vm.Title" Class="custom-mud-input" Label="Campaign Title" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Abc" AdornmentColor="Color.Primary" />
                                 <ValidationMessage For="()=>_vm.Title"></ValidationMessage>
                             </MudItem>
-                        <MudItem xs="6" sm="12" md="6" lg="6">
+                            <MudItem xs="6" sm="12" md="6" lg="6">
                                 <MudTextField @bind-Value="_vm.Amount" Class="custom-mud-input" Label="Campaign Amount" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="ETH" AdornmentColor="Color.Primary" />
                                 <ValidationMessage For="()=>_vm.Amount"></ValidationMessage>
                             </MudItem>
-                        <MudItem xs="6" sm="12" md="6" lg="6">
+                            <MudItem xs="6" sm="12" md="6" lg="6">
                                 <MudSelect Dense="true" T="string" @bind-Value="_vm.Category" Label="Campaign Category" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Category" AdornmentColor="Color.Primary">
-                                <MudSelectItem Value="@("FYP")" />
-                                <MudSelectItem Value="@("IT")" />
-                                <MudSelectItem Value="@("MEDICAL")" />
-                            </MudSelect>
+                                    <MudSelectItem Value="@("FYP")" />
+                                    <MudSelectItem Value="@("IT")" />
+                                    <MudSelectItem Value="@("MEDICAL")" />
+                                    <MudSelectItem Value="@("EDUCATION")" />
+                                    <MudSelectItem Value="@("FOOD")" />
+                                    <MudSelectItem Value="@("EDUCATION")" />
+                                </MudSelect>
                                 <ValidationMessage For="()=>_vm.Category"></ValidationMessage>
-                             </MudItem>
-                        <MudItem xs="6" sm="12" md="6" lg="6">
+                            </MudItem>
+                            <MudItem xs="6" sm="12" md="6" lg="6">
                                 @*Required FilesChanged="UploadFiles"*@
                                 <MudFileUpload T="IBrowserFile" Required="true" @bind-Files="_vm.ImgFile" InputClass="@_vm.ImgClassGuid">
-                                <ButtonTemplate Context="another_context" >
-                                    <MudFab HtmlTag="label"
-                                            Color="Color.Success"
-                                            Icon="@Icons.Filled.AttachFile"
-                                            for="@another_context" />
-                                </ButtonTemplate>
+                                    <ButtonTemplate Context="another_context">
+                                        <MudFab HtmlTag="label"
+                                                Color="Color.Success"
+                                                Icon="@Icons.Filled.AttachFile"
+                                                for="@another_context" />
+                                    </ButtonTemplate>
                                     <SelectedTemplate Context="another_context">
-                                    @if (another_context != null)
-                                    {
-                                        <MudText>@another_context.Name</MudText>
-                                    }
-                                    else
-                                    {
-                                        <MudText>No File</MudText>
-                                    }
-                                </SelectedTemplate>
-                            </MudFileUpload>
-                            
-                               @* @if (_file==null)
+                                        @if (another_context != null)
+                                        {
+                                            <MudText>@another_context.Name</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>No File</MudText>
+                                        }
+                                    </SelectedTemplate>
+                                </MudFileUpload>
+
+                                @* @if (_file==null)
                                 {
-                                    <div class="validation-message align-middle">Error</div>
+                                <div class="validation-message align-middle">Error</div>
                                 }
                                 else
                                 {
-                                    <div>@_file.Name</div>
+                                <div>@_file.Name</div>
                                 }*@
                                 <ValidationMessage For="()=>_vm.ImgFile"></ValidationMessage>
-                        </MudItem>
+                            </MudItem>
                             <MudItem xs="12" sm="12" md="12" lg="12">
                                 <MudTextField @bind-Value="_vm.Description" Class="custom-mud-input" Label="Campaign Description" Lines="6" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Description" AdornmentColor="Color.Primary" />
                                 <ValidationMessage For="()=>_vm.Description"></ValidationMessage>
                             </MudItem>
-                            <MudItem xs="12" sm="12" md="12" lg="12" Style="text-align:center;" >
+                            <MudItem xs="12" sm="12" md="12" lg="12" Style="text-align:center;">
                                 <MudButton Disabled="_apiCall" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">
-                                    @if(_apiCall)
+                                    @if (_apiCall)
                                     {
                                         <MudProgressCircular Class="ms-n1" Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
                                         <MudText Class="ms-2" Color="Color.Primary">Posting Campaign</MudText>
-                                    }else{
+                                    }
+                                    else
+                                    {
                                         <div>Launch New Campaign</div>
                                     }
                                 </MudButton>
                             </MudItem>
-                            
+
                         </MudGrid>
                     </div>
-                @*</div>*@
+                    @*</div>*@
+                </div>
             </div>
         </div>
-    </div>
     </EditForm>
 </section>
 
