@@ -20,11 +20,11 @@
     <Folder Include="wwwroot\assets\img\slider\" />
   </ItemGroup>
 	
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">-->
 		<!--<Exec Condition="$(Configuration) == 'Debug'" Command="cd JS &amp;&amp; npm i" />-->
 		<!--<Exec Condition="$(Configuration) == 'Release'" Command="cd JS &amp;&amp; npm i" />-->
 		<!--<Exec Condition="$(Configuration) == 'Debug'" Command="cd JS &amp;&amp; npm run snowpack-build" />-->
 		<!--<Exec Condition="$(Configuration) == 'Release'" Command="cd JS &amp;&amp; npm run snowpack-build" />-->
-	</Target>
+	<!--</Target>-->
 	
 </Project>
