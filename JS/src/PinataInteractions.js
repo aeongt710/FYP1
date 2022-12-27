@@ -97,10 +97,10 @@ export const UploadFileToIPFS = async (title, clasName, key, secret) => {
     // });
 };
 export const PinataPublicGateway='https://gateway.pinata.cloud/ipfs';
-
+export const aragon ='https://ipfs.eth.aragon.network/ipfs'
 export const GetDescriptionFromPinata = async (hash) => {
 
-    const url = `${PinataPublicGateway}/${hash}`;
+    const url = `${aragon}/${hash}`;
     let result = await axios.get(url);
     return result.data.desc
 }

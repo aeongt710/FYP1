@@ -1,4 +1,8 @@
-
+.profile-img {
+    width: 170px !important;
+    height: 200px !important;
+    border-radius: 25px !important;
+}
 
 .card-img-height{
     max-height:500px;
