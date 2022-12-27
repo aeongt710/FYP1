@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "FYP1.dll": "sha256-hMsI5TY1SB6f938hIjO5jLmSqZrCJDzcmBs1qMRquxM=",
+      "FYP1.dll": "sha256-V6TtoSo11kCaSdgO11dvMmsVWM7mrvtDZzz6YYWfII8=",
       "MetaMask.Blazor.dll": "sha256-ebDRKJnFcvd4wWXsrw783oLl0SnR2tjcBYktr0NVh44=",
       "Microsoft.AspNetCore.Authorization.dll": "sha256-Y8j8FCF\/LQc1EYCAdfs2+qUG6zENKHJwACYx\/bT7k4E=",
       "Microsoft.AspNetCore.Components.Authorization.dll": "sha256-0QMzfJ8QjRzFf2\/+lz1JXL2RYAEFcxx87F6ap6ee4IU=",
