@@ -21,6 +21,7 @@
         campaign.ContinueWith((e) =>
         {
             UnitCampaign = e.Result;
+            Console.WriteLine(UnitCampaign.ToString());
             StateHasChanged();
             GetDescriptionFromPINATA(UnitCampaign.descriptionhash)
                 .ContinueWith((f) =>

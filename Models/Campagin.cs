@@ -10,5 +10,10 @@
         public string owner { get; set; }
         public string publisheddate { get; set; }
         public string title { get; set; }
+
+        public override string? ToString()
+        {
+            return "title: {" + title + "} descriptionhash: {" + descriptionhash + "} imghash: {" + imghash + "}";
+        }
     }
 }
